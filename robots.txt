@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://devilstep.github.io/sitemap.xml 
