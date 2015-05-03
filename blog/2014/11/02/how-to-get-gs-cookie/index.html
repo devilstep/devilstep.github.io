@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>devilstep security group</title>
+  <title>How to Get GS Cookie - devilstep security group</title>
   <meta name="author" content="devilstep">
 
   
-  <meta name="description" content="author:anhkgg 关键函数定位 进入register窗口，随便填入name，然后check license，弹框信息”Invalid name or password. Please enter your name and password exactly as given when &hellip;">
+  <meta name="description" content="author:anhkgg Stack cookie Stack cookies (/GS Switch cookie)，windows防止栈溢出的一种机制，详见。 栈中的 cookie/GS保护 /GS 编译选项会在函数的开头和结尾添加代码来阻止对典型的栈溢出漏洞（字符串缓冲区）的利用。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://www.devilstep.com/">
+  <link rel="canonical" href="http://www.devilstep.com/blog/2014/11/02/how-to-get-gs-cookie/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="devilstep security group" type="application/atom+xml">
@@ -63,92 +63,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/11/18/010-keymakey-algorithm/">010注册算法分析</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-18T22:24:35-08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:24 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>author:anhkgg</p>
-
-<h3>关键函数定位</h3>
-
-<p>进入register窗口，随便填入name，然后check license，弹框信息”Invalid name or password. Please enter your name and password exactly as given when you purchased 010 Editor (make sure no quotes are included).”，通过该信息在IDA中找到对应函数地址，基本可以确认是关键函数位置，函数居然有名字，这是作者故意留下的吗。下面是整个验证函数流程：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/18/010-keymakey-algorithm/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/10/hctf-writeup/">Hctf Writeup</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-10T22:15:57-08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:15 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>author: anhkgg</p>
-
-<h3>丘比龙的最爱</h3>
-
-<p>传说，丘比龙是丘比特的弟弟，丘比龙是一只小爱神，虽然有两只翅膀，但因为吃多了，导致身体太胖，所以飞不起来~那么问题来了?!丘比龙吃什么食物吃多了变胖了
-百度之：甜甜圈</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/10/hctf-writeup/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/02/how-to-get-gs-cookie/">How to Get GS Cookie</a></h1>
+      <h1 class="entry-title">How to Get GS Cookie</h1>
     
     
       <p class="meta">
@@ -164,7 +84,7 @@
   </header>
 
 
-  <div class="entry-content"><p>author:anhkgg</p>
+<div class="entry-content"><p>author:anhkgg</p>
 
 <h3>Stack cookie</h3>
 
@@ -180,23 +100,119 @@
 在函数的结尾处，程序会把这个 cookie 和保存在.data 节中的 cookie 进行比较。
 如果不相等，就说明进程栈被破坏，进程必须被终止。</p>
 
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/02/how-to-get-gs-cookie/">Read on &rarr;</a>
-    </footer>
-  
+<!--more-->
 
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
+<p>栈中的 cookie/GS绕过方法
+挫败这种栈溢出保护机制的最直接的方法是检索/猜测/计算出 cookie 值（这样就可以用相同的 cookie
+覆盖栈中的 cookie），这个 cookie 有时候（很少）是一个静态值…但即使如此，它也可能包含一些不利
+的字符而导致不能使用它。</p>
+
+<h3>如何通过PE来获取GS cookie的值</h3>
+
+<p>在PE的DataDirectory中，第10序号的是一个叫做LoadConfig的东西，保存了映像的配置数据，里面就有GS cookie，来看看这个数据结构
+IMAGE_LOAD_CONFIG_DIRECTORY32</p>
+
+<pre><code>typedef struct {
+DWORD Size;
+DWORD TimeDateStamp;
+WORD MajorVersion;
+WORD MinorVersion;
+DWORD GlobalFlagsClear;
+DWORD GlobalFlagsSet;
+DWORD CriticalSectionDefaultTimeout;
+DWORD DeCommitFreeBlockThreshold;
+DWORD DeCommitTotalFreeThreshold;
+DWORD LockPrefixTable; // VA
+DWORD MaximumAllocationSize;
+DWORD VirtualMemoryThreshold;
+DWORD ProcessHeapFlags;
+DWORD ProcessAffinityMask;
+WORD CSDVersion;
+WORD Reserved1;
+DWORD EditList; // VA
+DWORD SecurityCookie; // VA
+DWORD SEHandlerTable; // VA
+DWORD SEHandlerCount;
+} IMAGE_LOAD_CONFIG_DIRECTORY32, *PIMAGE_LOAD_CONFIG_DIRECTORY32;
+
+SecurityCookie
+A pointer to a cookie that is used by Visual C++ or GS implementation.
+</code></pre>
+
+<p>所以，可以通过解析pe的方式，获取到SecurityCookie，进而绕过cookie/GS保护，这只是我的想法，也没测试过，是在分析某个sys的时间想到的，下面贴出获取Cookie的代码</p>
+
+<pre><code>unsigned int __stdcall myGetGSSecureCookie(PVOID ImageBase, ULONG Size)
+{
+ULONG v2; // edi@1
+PVOID v3; // esi@1
+PVOID v4; // eax@2
+unsigned int result; // eax@7
+v3 = ImageBase;
+v2 = Size;
+if ( (signed int)myGetValidNtHeader(1, (unsigned int)ImageBase, Size, (int)&amp;ImageBase) &lt; 0//myGetValidNtHeader获取nt头地址
+|| (v4 = RtlImageDirectoryEntryToData(v3, 1u, 0xAu, &amp;Size), !v4)// 通过加载配置目录信息找到SecureCookie
+|| !Size
+|| Size != 0x40 &amp;&amp; Size != *(_DWORD *)v4
+|| *(_DWORD *)v4 &lt; 0x48u
+|| (result = *((_DWORD *)v4 + 15), result &lt;= (unsigned int)v3)// loadcofig-&gt;SecurityCookie
+// A pointer to a cookie that is used by Visual C++ or GS implementation.
+|| result &gt;= (unsigned int)(v3 + v2 – 4) )
+result = 0;
+return result;
+}
+</code></pre>
+
+<p>其他</p>
+
+<p>没来得及查资料，是否有完整的绕过方法，这只是自己突然分析到这，想到的，不对之处，敬请见谅。</p>
 </div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">devilstep</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-02T22:12:09-08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>10:12 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/binary/'>binary</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.devilstep.com/blog/2014/11/02/how-to-get-gs-cookie/" data-via="" data-counturl="http://www.devilstep.com/blog/2014/11/02/how-to-get-gs-cookie/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/11/10/hctf-writeup/" title="Next Post: hctf writeup">hctf writeup &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -227,6 +243,7 @@
 </section>
   
 </aside>
+
 
     </div>
   </div>

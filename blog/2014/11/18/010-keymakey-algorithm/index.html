@@ -1,0 +1,447 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>010注册算法分析 - devilstep security group</title>
+  <meta name="author" content="devilstep">
+
+  
+  <meta name="description" content="author:anhkgg 关键函数定位 进入register窗口，随便填入name，然后check license，弹框信息”Invalid name or password. Please enter your name and password exactly as given when &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.devilstep.com/blog/2014/11/18/010-keymakey-algorithm/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="devilstep security group" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">devilstep security group</a></h1>
+  
+    <h2>do some really security things and projects.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="www.devilstep.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">010注册算法分析</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-18T22:24:35-08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:24 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>author:anhkgg</p>
+
+<h3>关键函数定位</h3>
+
+<p>进入register窗口，随便填入name，然后check license，弹框信息”Invalid name or password. Please enter your name and password exactly as given when you purchased 010 Editor (make sure no quotes are included).”，通过该信息在IDA中找到对应函数地址，基本可以确认是关键函数位置，函数居然有名字，这是作者故意留下的吗。下面是整个验证函数流程：</p>
+
+<!--more-->
+
+
+<pre><code>void __usercall chekc(char a1&lt;zf&gt;, int a2&lt;ecx&gt;)
+{
+//获取用户名
+//是否为空
+//获取注册码
+//是否为空
+//注册码格式检查xxxx-xxxx-xxxx-xxxx-xxxx
+v42 = (void *)myCheck(mygbName, 3u, ‘9A’); //注册码验证，返回值v42对于是否注册成功，有很大关系，返回值为231，为失败
+v26 = mySecondCheck(mygbName, 3u, ‘9A’); // 第二次检查，如果返回中为219，就会进入后面的注册成功提示
+//myCheck中返回不等于231，mygbName + 44提示进入网络验证，没有弄清楚，哪里会等于1
+if ( v42 != (void *)231 &amp;&amp; *(_DWORD *)(mygbName + 44) )
+{
+v27 = myWebCheck((void *)mygbName, 0);
+if(v27 &lt; 0 )
+{
+v43 = myMsg(“Could not contact the webserver. Please check your internet connection. If your internet connection is currently working, the server may be down. If this problem persists, please visit ‘http://www.sweetscape.com/support/’ (“, 0xFFFFFFFFu);
+}
+if ( !v27 )
+{
+v43 = myMsg( “010 Editor has detected that you have entered an invalid license. Please check to see if your license is entered correctly and try again. If this problem persists, please visit ‘http://www.sweetscape.com/support/’.”, 0xFFFFFFFFu);
+}
+v33 = mySecondCheck(mygbName, 3u, ‘9A’);//网络验证是否成功，成功，返回219
+}
+if ( v43 == (void *)219 ) // v43 == 219，注册成功
+{
+v43 = myMsg(“Password accepted. Thank you for purchasing 010 Editor!”, 0xFFFFFFFFu);
+//写入注册表
+}
+}
+</code></pre>
+
+<h3>算法分析</h3>
+
+<p>下面看看主要的验证函数myCheck和mySecondCheck，代码如下：</p>
+
+<pre><code>signed int __thiscall mySecondCheck(int this, unsigned int a2, unsigned int a3)
+{
+int v3; // esi@1
+signed int result; // eax@2
+int v5; // eax@3
+int v6; // eax@6
+int v7; // eax@9
+v3 = this;
+if ( *(_DWORD *)(this + 44) ) // 要让这个值等于0，否则进入网络验证，初始化就是0
+return 275;
+v5 = myCheck(this, a2, a3); //可以看到，只有返回值是45时，才能返回219，注册成功
+if ( v5 == 45 )
+{
+result = 219; // 返回219， 注册成功
+}
+}
+</code></pre>
+
+<p>可以看到，只有返回值是45时，才能返回219，注册成功。
+那么返回myCheck看看，怎么才能得到45的返回值，整个返回值查看一下，只有两处位置，可能返回45，如下：</p>
+
+<pre><code>if ( v26 == 0x9Cu )
+{
+v20 = *(_DWORD *)(regdlg + 28) &lt; a2;
+return (-v20 &amp; 0x21) + 45; // 成功？
+}
+if ( v26 != 0xFCu )
+{
+if ( v26 == 0xACu &amp;&amp; v33 )
+{
+v20 = v33 &lt; a3;
+return (-v20 &amp; 0x21) + 45; // 成功？
+}
+return 231;
+}
+</code></pre>
+
+<p>那么就需要回溯回去，看看v26，是如何得到的，只有在v26等于0x9c或者0xAc时，才有可能注册成功。下面看看完整代码：</p>
+
+<pre><code>int __thiscall myCheck(int this, unsigned int a2, unsigned int a3)
+{
+//name和key长度是否为0
+//myPassCheck(this, (int)&amp;v23);//将key字符串转换成数值，每两个字符转化成2为十六进制数，
+//xxxx-xxxx-xxxx-xxxx-xxxx分别对应k1k2-k3k4-k5k6-k7k8-k9k10
+//v23其实就是一个数组，存的就是k1-k10
+//检测name是否等于’999′,是，则失败
+if ( v26 == 0x9Cu )
+{
+LOBYTE(v32) = v23 ^ v28; // k1^k7
+LOWORD(v6) = (unsigned __int8)(v24 ^ v29); // k2^k8
+LOWORD(v7) = (unsigned __int8)(v25 ^ HIBYTE(v27));// k3^k6
+v11 = v7 + ((_DWORD)v6 &lt;&lt; 8); // v11 = k3^k6 + ((k2^k8)&lt;&lt;8)
+*(_DWORD *)(regdlg + 28) = (unsigned __int8)myCal1(v23 ^ v28);// k1^k7 =&gt; 不能等于0
+v9 = myCal2(v11); // 不能等于0
+v10 = *(_DWORD *)(regdlg + 28);
+*(_DWORD *)(regdlg + 32) = (unsigned __int16)v9;
+// v10==0,v9==0或者v9&gt;0x3e8，返回231
+if ( !v10 || !v9 || (unsigned __int16)v9 &gt; 0x3E8u )
+return 231;
+v12 = v10 &lt; 2 ? v10 : 0; // v12 = 0或者1
+}else
+{
+if(v26 == 0xFC)
+{//不可能成功
+}esle
+{
+//v26不等于0xAC，退出，返回231，失败
+//myCal2(k3^k6 + ((k2^k8)&lt;&lt;8)) &gt; 0x3E8, 失败
+if ( v26 != 0xACu
+|| (v15 = v24 ^ v29,//k2^k8
+v16 = v25 ^ HIBYTE(v27),//k3^k6
+*(_DWORD *)(regdlg + 28) = 2,
+v14 = (unsigned __int16)myCal2(v16 + (v15 &lt;&lt; 8)),v11 = k3^k6 + ((k2^k8)&lt;&lt;8)
+*(_DWORD *)(regdlg + 32) = (unsigned __int16)v14,
+!(_WORD)v14)
+|| v14 &gt; 0x3E8 )
+return 231;
+//sub_4FD0B9( (k1^k7 + (k9^k5 + (k6^k10)&lt;&lt;8)&lt;&lt;8), xxx);
+//其实就是凑成十六进制数(k6^k10)(k9^k5)(k1^k7)
+v17 = sub_4FD0B9(
+(v23 ^ v28) + (((v30 ^ (unsigned __int8)v27) + ((HIBYTE(v27) ^ v31) &lt;&lt; 8)) &lt;&lt; 8),
+(char *)loc_5B8C25 + 2);
+v33 = v17;
+*(_DWORD *)(regdlg + 52) = v17;
+v12 = v17;
+}
+}
+//编码name，返回给v18，
+v18 = myEncStr(*(const char **)(*(_DWORD *)qstrname + 12), v26 != -4, v12, *(_DWORD *)(regdlg + 32));
+//如果v18，如0xABCDEF10分解成0xAB，0xCD， 0xEF10,不等于v29, v28,v27就失败，其实就是
+//(k6k5) = 0xEF10, k7 = 0xCD, k8 = 0xAB
+if ( v27 != (_WORD)v18
+|| v28 != (unsigned __int8)((unsigned int)v18 &gt;&gt; 0x10u)
+|| v29 != (unsigned __int8)((unsigned int)v18 &gt;&gt; 0x18u) )
+return 231; // 这三个条件很重要啊
+//下面就接近成功了，就是上面提到的返回45的结果，成功
+if ( v26 == 0x9Cu )
+{
+//这里就需要regdlg + 28 = myCal1(k1^k7) &gt;= a2,也就是3，传入的a2是3
+//然后v20就是0，那么(-v20 &amp; 0x21)=0，最后返回45
+v20 = *(_DWORD *)(regdlg + 28) &lt; a2;
+return (-v20 &amp; 0x21) + 45; // 成功？
+}
+if ( v26 != 0xFCu )
+{
+if ( v26 == 0xACu &amp;&amp; v33 )
+{
+v20 = v33 &lt; a3;
+return (-v20 &amp; 0x21) + 45; // 成功？
+}
+return 231;
+}
+}
+</code></pre>
+
+<p>最后总结一下算法，基本可以列出一个方程类似的东西：</p>
+
+<pre><code>k4 = 0x9C或者0xAC
+myCal1(k1^k7) &gt;= 3;//可以任取大于等于3的值，算出k1^k7=？
+myCal2(k3^k6 + ((k2^k8)&lt;&lt;8)) &gt; 0;//可以任去大于0
+myCal2(k3^k6 + ((k2^k8)&lt;&lt;8)) &lt; 0x3E8;//小于0x3E8的某一个值，算出k3^k6 + ((k2^k8)&lt;&lt;8) = ？
+k8k7k6k5 = v18;//0xABCDEF10，可以得到k5=?,k6=?,k7=?,k8=?，由此可以算出上面的k1,k2
+sub_4FD0B9((k6^k10)(k9^k5)(k1^k7), xx) = ?//可以算出k9，k10
+</code></pre>
+
+<p>下面就0x9C的情况写了个注册机</p>
+
+<h3>注册机</h3>
+
+<p>根据上面的注册算法，写了个针对0x9c的注册机：</p>
+
+<pre><code>DWORD ckname(char* name, int isnotFC, int islowk1k7, DWORD k3k6k2k8 )
+{
+int slen = strlen(name);
+if(slen &gt; 0 )
+{
+DWORD v15 = 0, v17 = 0, v16 = 0, chk = 0, v9 = 0, v8=0, v14 = 0, v5 = 0, v6 = 0;
+while(v14 &lt; slen)
+{
+DWORD v7 = toupper(name[v14]);
+if(isnotFC)
+{
+v9 = dword_B21DC4[(v17 + 15 * k3k6k2k8) &amp; 0xFF]
++ dword_B21DC4[(v6 + 17 * islowk1k7) &amp; 0xFF]
++ dword_B21DC4[(v7 + 47) &amp; 0xFF] * ((v5 + dword_B21DC4[v7]) ^ dword_B21DC4[(v7 + 13) &amp; 0xFF]);
+v8 = v16;
+}
+else{
+v9 = dword_B21DC4[(v17 + 15 * k3k6k2k8) &amp; 0xFF]
++ dword_B21DC4[(v6 + 17 * islowk1k7) &amp; 0xFF]
++ dword_B21DC4[(v7 + 23) &amp; 0xFF] * ((v5 + dword_B21DC4[v7]) ^ dword_B21DC4[(v7 + 63) &amp; 0xFF]);
+v8 = v15;
+}
+v16 += 19;
+v17 += 13;
+v15 += 7;
+v6 += 9;
+v5 = dword_B21DC4[v8] + v9;
+v14 = v14 + 1;
+}
+return v5;
+}
+}
+int main()
+{
+char name[] = “”;
+char key[0x20] = {0};
+int k4 = 0x9c;//0xac
+int islowk1k7 = 3;//&gt;=3
+int k1_xor_k7 = ((islowk1k7^0xA7)-61)^0x18;
+int k3k6k2k8 = 1;//k3k6k2k8&gt;=1 &amp;&amp; k3k6k2k8&lt;0x3E8，其中任意一个值
+int k3_xor_k6_k2_xor_k8 = 0xFFFF &amp; (((k3k6k2k8*11)^0x3421)-19760);
+k3_xor_k6_k2_xor_k8 = k3_xor_k6_k2_xor_k8^0x7892;
+int k3_xor_k6 = k3_xor_k6_k2_xor_k8 &amp; 0xff;//低位
+int k2_xor_k8 = k3_xor_k6_k2_xor_k8 &gt;&gt; 8;//高位
+int k1=0, k2=0, k3=0, k5=0, k6=0, k7=0, k8=0, k9=0, k10=0;//
+printf(“****************************************************\n”);
+printf(“************* 010 Editor v3.1.2 keygen *************\n”);
+printf(“************* by anhkgg 2014-11-18 *************\n”);
+printf(“****************************************************\n\n”);
+printf(“name&gt;”);
+scanf(“%s”, name);
+if(!stricmp(name, “999”))
+{
+printf(“name is not valid!\n”);
+system(“pause”);
+return 0;
+}
+DWORD name_chk = ckname(name, k4==0x9C?1:0, islowk1k7&lt;2?islowk1k7:0, k3k6k2k8) ;
+k5 = name_chk &amp; 0xFF;
+k6 = (name_chk &amp; 0xFFFF)&gt;&gt;8;//
+k7 = (name_chk &gt;&gt; 16) &amp; 0xFF;//
+k8 = (name_chk &gt;&gt; 24) &amp; 0xFF;//
+k1 = k1_xor_k7 ^ k7;//
+k2 = k2_xor_k8 ^ k8;
+k3 = k3_xor_k6 ^ k6;//
+printf(“key&gt;%02x%02x-%02x%02x-%02x%02x-%02x%02x\n\n”, k1, k2, k3, k4, k5, k6, k7, k8);
+system(“pause”);
+return 0;
+}
+</code></pre>
+
+<h3>其他</h3>
+
+<p>本次分析针对的是010 v3.1.2
+希望各位大牛不要见笑，欢迎交流</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">devilstep</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-18T22:24:35-08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:24 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/binary/'>binary</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.devilstep.com/blog/2014/11/18/010-keymakey-algorithm/" data-via="" data-counturl="http://www.devilstep.com/blog/2014/11/18/010-keymakey-algorithm/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/10/hctf-writeup/" title="Previous Post: hctf writeup">&laquo; hctf writeup</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About</h1>
+  <p>Just some guys from all over the world and do some really good things.</p>
+</section>
+<section>
+    <h1>分类目录</h1>
+    <ul>
+        <li>
+            <a href="http://www.devilstep.com/categories/binary" title="Binary">Binary</a>
+        </li>
+        <li><a href="http://www.devilstep.com/categories/mobile" title="Mobile">Mobile</a>
+        </li>
+        <li><a href="http://www.devilstep.com/categories/websec" title="Websec">Websec</a>
+        </li>
+    </ul>
+</section><section>
+    <h1>链接</h1>
+    <ul>
+        <li><a href="http://anhkgg.gitcafe.com" target="_blank">anhkgg</a></li>
+        <li><a href="http://crazysprite.gitcafe.com" target="_blank">crazysprite</a></li>
+        <li><a href="http://my.oschina.net/bluefly" target="_blank">羊哥</a></li>
+        <li><a href="http://coolsmurfs.github.io" target="_blank"> coolsmurfs</a></li>
+        <li><a href="http://rtoheaven.github.io" target="_blank">rtoheaven</a></li>
+        <li><a href="http://www.jinglingshu.org" target="_blank">jinglingshu</a></li>
+    </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - devilstep -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

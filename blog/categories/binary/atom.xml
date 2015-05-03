@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[devilstep security group]]></title>
-  <link href="http://www.devilstep.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Binary | devilstep security group]]></title>
+  <link href="http://www.devilstep.com/blog/categories/binary/atom.xml" rel="self"/>
   <link href="http://www.devilstep.com/"/>
   <updated>2015-05-02T23:29:34-07:00</updated>
   <id>http://www.devilstep.com/</id>
@@ -305,7 +305,7 @@ f2.close()
 </code></pre>
 
 <p>得到一张女神照片，纠结了会，google图片之，找到女神名字“爱新觉罗·启星”，被中间的点坑了几次，然后flag是“爱新觉罗启星”， 出题人原来喜欢她啊
-<img src="http://www.devilstep.com/upload/0751f444dc849c083ee0f0826e8f567e.jpg" alt="ss" /></p>
+<img src="/upload/0751f444dc849c083ee0f0826e8f567e.jpg" alt="ss" /></p>
 
 <h3>babyCrack</h3>
 
