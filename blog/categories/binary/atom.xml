@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Binary | devilstep security group]]></title>
   <link href="http://www.devilstep.com/blog/categories/binary/atom.xml" rel="self"/>
   <link href="http://www.devilstep.com/"/>
-  <updated>2015-05-02T23:42:45-07:00</updated>
+  <updated>2015-05-04T00:17:04-07:00</updated>
   <id>http://www.devilstep.com/</id>
   <author>
     <name><![CDATA[devilstep]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[010注册算法分析]]></title>
-    <link href="http://www.devilstep.com/blog/2014/11/18/010-keymakey-algorithm/"/>
+    <link href="http://www.devilstep.com/2014/11/18/010-keymakey-algorithm/"/>
     <updated>2014-11-18T22:24:35-08:00</updated>
-    <id>http://www.devilstep.com/blog/2014/11/18/010-keymakey-algorithm</id>
+    <id>http://www.devilstep.com/2014/11/18/010-keymakey-algorithm</id>
     <content type="html"><![CDATA[<p>author:anhkgg</p>
 
 <h3>关键函数定位</h3>
@@ -273,9 +273,9 @@ return 0;
   
   <entry>
     <title type="html"><![CDATA[Hctf Writeup]]></title>
-    <link href="http://www.devilstep.com/blog/2014/11/10/hctf-writeup/"/>
+    <link href="http://www.devilstep.com/2014/11/10/hctf-writeup/"/>
     <updated>2014-11-10T22:15:57-08:00</updated>
-    <id>http://www.devilstep.com/blog/2014/11/10/hctf-writeup</id>
+    <id>http://www.devilstep.com/2014/11/10/hctf-writeup</id>
     <content type="html"><![CDATA[<p>author: anhkgg</p>
 
 <h3>丘比龙的最爱</h3>
@@ -508,9 +508,9 @@ fffff880`02f85dea 00cc add ah,cl
   
   <entry>
     <title type="html"><![CDATA[How to Get GS Cookie]]></title>
-    <link href="http://www.devilstep.com/blog/2014/11/02/how-to-get-gs-cookie/"/>
+    <link href="http://www.devilstep.com/2014/11/02/how-to-get-gs-cookie/"/>
     <updated>2014-11-02T22:12:09-08:00</updated>
-    <id>http://www.devilstep.com/blog/2014/11/02/how-to-get-gs-cookie</id>
+    <id>http://www.devilstep.com/2014/11/02/how-to-get-gs-cookie</id>
     <content type="html"><![CDATA[<p>author:anhkgg</p>
 
 <h3>Stack cookie</h3>
